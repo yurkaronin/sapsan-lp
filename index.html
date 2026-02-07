@@ -16,21 +16,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
-        /* Smooth anchor scrolling */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Slightly nicer form select arrow */
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
         }
+
+        /* Mobile: clamp long description to reduce height */
+        .clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Make <summary> look clean (no default marker) */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        @media (max-width: 1023px) {
+            .custom-block {
+                display: block !important;
+            }
+        }
     </style>
 
     <script>
-        // Tailwind theme tweak (optional)
         tailwind.config = {
             theme: {
                 extend: {
@@ -76,7 +92,8 @@
                         Получить консультацию
                     </a>
                     <button id="mobileMenuBtn"
-                        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50">
+                        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50"
+                        aria-label="Открыть меню">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -97,10 +114,9 @@
         </div>
     </header>
 
-    <!-- Hero / Screen 1 -->
     <main>
+        <!-- Hero -->
         <section class="relative overflow-hidden">
-            <!-- Decorative background -->
             <div class="absolute inset-0 pointer-events-none">
                 <div class="absolute -top-24 -right-24 w-80 h-80 bg-slate-900/10 rounded-full blur-3xl"></div>
                 <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
@@ -237,13 +253,15 @@
             </div>
         </section>
 
-        <!-- Section 2: Equipment detailed card (hidden until both selects chosen) -->
+        <!-- Section 2: Equipment detailed card -->
         <section id="equipment" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
             <div id="equipmentWrap" class="hidden">
                 <div class="rounded-3xl bg-white border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="grid lg:grid-cols-12 gap-0">
+
+                    <div class="grid lg:grid-cols-12 gap-0 custom-block">
                         <!-- Media -->
-                        <div class="lg:col-span-6 p-6 sm:p-8 border-b lg:border-b-0 lg:border-r border-slate-200">
+                        <div
+                            class="lg:col-span-6 p-4 sm:p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-200">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="text-sm text-slate-500">Фото и видео</div>
                                 <span id="matchBadge"
@@ -255,12 +273,12 @@
 
                             <!-- Swiper gallery -->
                             <div class="mt-4">
-                                <div class="swiper rounded-2xl border border-slate-200" id="gallerySwiper">
+                                <div class="swiper rounded-2xl border border-slate-200 overflow-hidden"
+                                    id="gallerySwiper">
                                     <div class="swiper-wrapper">
-                                        <!-- Placeholder slides (replace with real images) -->
                                         <div class="swiper-slide">
                                             <div
-                                                class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                                                class="h-44 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                                                 <div class="text-center">
                                                     <i class="fa-solid fa-camera text-2xl text-slate-500"></i>
                                                     <div class="mt-2 text-sm text-slate-600">Фото 1 (замените на
@@ -270,7 +288,7 @@
                                         </div>
                                         <div class="swiper-slide">
                                             <div
-                                                class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                                                class="h-44 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                                                 <div class="text-center">
                                                     <i class="fa-solid fa-camera text-2xl text-slate-500"></i>
                                                     <div class="mt-2 text-sm text-slate-600">Фото 2</div>
@@ -279,7 +297,7 @@
                                         </div>
                                         <div class="swiper-slide">
                                             <div
-                                                class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                                                class="h-44 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                                                 <div class="text-center">
                                                     <i class="fa-solid fa-camera text-2xl text-slate-500"></i>
                                                     <div class="mt-2 text-sm text-slate-600">Фото 3</div>
@@ -293,9 +311,25 @@
 
                             <!-- Video -->
                             <div class="mt-5">
-                                <div class="text-sm text-slate-500 mb-2">Видео</div>
-                                <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-100">
-                                    <!-- Replace src with your real video (YouTube/VK/Rutube iframe) -->
+                                <div class="flex items-center justify-between gap-3">
+                                    <div class="text-sm text-slate-500">Видео</div>
+
+                                    <!-- Mobile toggle button -->
+                                    <button id="videoToggleBtn" type="button"
+                                        class="lg:hidden inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold bg-white border border-slate-200 hover:bg-slate-50">
+                                        <i class="fa-solid fa-play"></i>
+                                        Смотреть видео обзор
+                                        <i id="videoChevron"
+                                            class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Video container:
+       - on desktop (lg+) always visible
+       - on mobile hidden until button click -->
+                                <div id="videoWrap"
+                                    class="mt-3 hidden lg:block rounded-2xl border border-slate-200 overflow-hidden bg-slate-100">
+                                    <!-- Replace with real iframe (YouTube/VK/Rutube) -->
                                     <div class="aspect-video flex items-center justify-center text-slate-600">
                                         <div class="text-center px-6">
                                             <i class="fa-solid fa-play text-2xl"></i>
@@ -305,10 +339,11 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Content -->
-                        <div class="lg:col-span-6 p-6 sm:p-8">
+                        <div class="lg:col-span-6 p-4 sm:p-6 lg:p-8">
                             <div>
                                 <div class="text-sm text-slate-500">Рекомендуемая модель</div>
 
@@ -316,13 +351,22 @@
                                     Фотосепаратор «Сапсан Optima»
                                 </h2>
 
-                                <p id="equipSub" class="mt-3 text-slate-600 leading-relaxed">
+                                <!-- Description (clamped on mobile) -->
+                                <p id="equipSub"
+                                    class="mt-3 text-slate-600 leading-relaxed clamp-3 sm:[-webkit-line-clamp:unset] sm:overflow-visible">
                                     Высокоточный фотосепаратор для стабильной сортировки и минимальных потерь продукта.
                                     Подходит для большинства сельскохозяйственных культур и может встраиваться в любую
                                     технологическую цепь.
                                 </p>
 
-                                <!-- Цена под заголовком и описанием -->
+                                <!-- Toggle desc only on mobile -->
+                                <button id="toggleDesc"
+                                    class="mt-2 inline-flex sm:hidden items-center gap-2 text-sm font-semibold text-slate-900 hover:underline"
+                                    type="button">
+                                    Показать полностью <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </button>
+
+                                <!-- Price -->
                                 <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                     <div class="text-sm text-slate-500">Цена</div>
                                     <div id="equipPrice" class="mt-1 text-2xl font-semibold text-slate-900">от 2 500 000
@@ -331,32 +375,62 @@
                                 </div>
                             </div>
 
-
                             <!-- Specs -->
                             <div class="mt-6">
-                                <div class="text-sm font-semibold text-slate-900">Характеристики</div>
-                                <dl class="mt-3 grid sm:grid-cols-2 gap-3">
-                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                        <dt class="text-xs text-slate-500">Количество лотков</dt>
-                                        <dd class="mt-1 text-sm font-semibold">2–6</dd>
-                                    </div>
-                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                        <dt class="text-xs text-slate-500">Производительность</dt>
-                                        <dd class="mt-1 text-sm font-semibold">до 10 т/ч</dd>
-                                    </div>
-                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                        <dt class="text-xs text-slate-500">Тип камер</dt>
-                                        <dd class="mt-1 text-sm font-semibold">цветные + ИК</dd>
-                                    </div>
-                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                        <dt class="text-xs text-slate-500">Производство</dt>
-                                        <dd class="mt-1 text-sm font-semibold">Россия, Воронеж</dd>
-                                    </div>
-                                </dl>
+                                <!-- Desktop/tablet -->
+                                <div class="hidden sm:block">
+                                    <div class="text-sm font-semibold text-slate-900">Характеристики</div>
+                                    <dl class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                                            <dt class="text-xs text-slate-500">Количество лотков</dt>
+                                            <dd class="mt-1 text-sm font-semibold">2–6</dd>
+                                        </div>
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                                            <dt class="text-xs text-slate-500">Производительность</dt>
+                                            <dd class="mt-1 text-sm font-semibold">до 10 т/ч</dd>
+                                        </div>
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                                            <dt class="text-xs text-slate-500">Тип камер</dt>
+                                            <dd class="mt-1 text-sm font-semibold">цветные + ИК</dd>
+                                        </div>
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                                            <dt class="text-xs text-slate-500">Производство</dt>
+                                            <dd class="mt-1 text-sm font-semibold">Россия, Воронеж</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <!-- Mobile: accordion -->
+                                <details class="sm:hidden rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                    <summary
+                                        class="cursor-pointer list-none flex items-center justify-between font-semibold text-slate-900">
+                                        Характеристики
+                                        <i class="fa-solid fa-chevron-down text-xs text-slate-500"></i>
+                                    </summary>
+
+                                    <dl class="mt-3 grid gap-2 text-sm">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <dt class="text-slate-500">Лотки</dt>
+                                            <dd class="font-semibold">2–6</dd>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <dt class="text-slate-500">Производительность</dt>
+                                            <dd class="font-semibold">до 10 т/ч</dd>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <dt class="text-slate-500">Камеры</dt>
+                                            <dd class="font-semibold">цветные + ИК</dd>
+                                        </div>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <dt class="text-slate-500">Производство</dt>
+                                            <dd class="font-semibold">Воронеж</dd>
+                                        </div>
+                                    </dl>
+                                </details>
                             </div>
 
                             <!-- CTAs -->
-                            <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                            <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3">
                                 <a href="#preorder" id="btnPreorder"
                                     class="inline-flex justify-center items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800 shadow-sm">
                                     <i class="fa-solid fa-cart-shopping"></i>
@@ -369,7 +443,8 @@
                                 </a>
                             </div>
 
-                            <div class="mt-6 text-xs text-slate-500 leading-relaxed">
+                            <!-- Note: hidden on mobile to reduce height -->
+                            <div class="mt-6 hidden sm:block text-xs text-slate-500 leading-relaxed">
                                 Каждый фотосепаратор «Сапсан» проектируется под конкретные задачи сортировки, при этом
                                 эффективно работает на широком спектре продуктов. Мы сопровождаем оборудование на
                                 протяжении всего жизненного цикла.
@@ -379,7 +454,7 @@
                 </div>
             </div>
 
-            <!-- Placeholder while hidden (optional) -->
+            <!-- Placeholder while hidden -->
             <div id="equipmentHint"
                 class="rounded-3xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-600">
                 <div class="mx-auto w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center">
@@ -392,7 +467,7 @@
             </div>
         </section>
 
-        <!-- Section 3: Catalog (5 cards) -->
+        <!-- Section 3: Catalog -->
         <section id="catalog" class="bg-white border-y border-slate-200">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
                 <div class="flex items-end justify-between gap-6 flex-wrap">
@@ -411,11 +486,11 @@
                 </div>
 
                 <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Card template -->
+                    <!-- Card 1 -->
                     <article
                         class="rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden hover:shadow-sm transition">
                         <div
-                            class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                            class="h-48 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fa-solid fa-image text-2xl text-slate-500"></i>
                                 <div class="mt-2 text-sm text-slate-600">Фото «Сапсан Start»</div>
@@ -439,10 +514,11 @@
                         </div>
                     </article>
 
+                    <!-- Card 2 -->
                     <article
                         class="rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden hover:shadow-sm transition">
                         <div
-                            class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                            class="h-48 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fa-solid fa-image text-2xl text-slate-500"></i>
                                 <div class="mt-2 text-sm text-slate-600">Фото «Сапсан Standard»</div>
@@ -466,10 +542,11 @@
                         </div>
                     </article>
 
+                    <!-- Card 3 -->
                     <article
                         class="rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden hover:shadow-sm transition">
                         <div
-                            class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                            class="h-48 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fa-solid fa-image text-2xl text-slate-500"></i>
                                 <div class="mt-2 text-sm text-slate-600">Фото «Сапсан Optima»</div>
@@ -493,10 +570,11 @@
                         </div>
                     </article>
 
+                    <!-- Card 4 -->
                     <article
                         class="rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden hover:shadow-sm transition">
                         <div
-                            class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                            class="h-48 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fa-solid fa-image text-2xl text-slate-500"></i>
                                 <div class="mt-2 text-sm text-slate-600">Фото «Сапсан Pro»</div>
@@ -520,10 +598,11 @@
                         </div>
                     </article>
 
+                    <!-- Card 5 -->
                     <article
                         class="rounded-3xl border border-slate-200 bg-slate-50 overflow-hidden hover:shadow-sm transition">
                         <div
-                            class="aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                            class="h-48 sm:h-auto sm:aspect-[16/10] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fa-solid fa-image text-2xl text-slate-500"></i>
                                 <div class="mt-2 text-sm text-slate-600">Фото «Сапсан Multi»</div>
@@ -550,7 +629,7 @@
             </div>
         </section>
 
-        <!-- Section 4: Preorder form -->
+        <!-- Section 4: Preorder -->
         <section id="preorder" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
             <div class="grid lg:grid-cols-12 gap-10 items-start">
                 <div class="lg:col-span-5">
@@ -719,9 +798,8 @@
             spaceBetween: 12
         });
 
-        // Data: simple matching (extend as needed)
+        // Data: simple matching
         const MODEL_MAP = {
-            // default recommendations
             "grain|bulk": { title: "Фотосепаратор «Сапсан Standard»", price: "от 1 800 000 ₽", sub: "Универсальная модель для зерновых и сыпучих продуктов. Стабильная сортировка и удобная интеграция в линию." },
             "legumes|bulk": { title: "Фотосепаратор «Сапсан Optima»", price: "от 2 500 000 ₽", sub: "Высокоточная сортировка бобовых и смешанных фракций. Оптимальный баланс точности и производительности." },
             "seeds|bulk": { title: "Фотосепаратор «Сапсан Optima»", price: "от 2 500 000 ₽", sub: "Для семян и калибровки: точность обнаружения дефектов, минимальные потери." },
@@ -744,7 +822,6 @@
         const equipTitle = document.getElementById('equipTitle');
         const equipSub = document.getElementById('equipSub');
         const equipPrice = document.getElementById('equipPrice');
-        // const equipPriceMobile = document.getElementById('equipPriceMobile');
 
         function getKey() {
             const p = productSelect.value;
@@ -770,12 +847,15 @@
             equipTitle.textContent = data.title;
             equipSub.textContent = data.sub;
             equipPrice.textContent = data.price;
-            // equipPriceMobile.textContent = data.price;
+
+            // Reset clamping state for mobile when model changes
+            equipSub.classList.add('clamp-3');
+            const toggleDesc = document.getElementById('toggleDesc');
+            if (toggleDesc) toggleDesc.innerHTML = 'Показать полностью <i class="fa-solid fa-chevron-down text-xs"></i>';
 
             equipmentHint.classList.add('hidden');
             equipmentWrap.classList.remove('hidden');
 
-            // Scroll to equipment card for instant feedback (optional)
             document.getElementById('equipment').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -786,7 +866,6 @@
         document.querySelectorAll('.btnMore').forEach(btn => {
             btn.addEventListener('click', () => {
                 const model = btn.getAttribute('data-model');
-                // Minimal mapping from catalog -> selects (can be expanded)
                 const presets = {
                     start: { product: "grain", shape: "bulk" },
                     standard: { product: "grain", shape: "bulk" },
@@ -797,10 +876,22 @@
                 const preset = presets[model] || { product: "other", shape: "mix" };
                 productSelect.value = preset.product;
                 shapeSelect.value = preset.shape;
-
                 showEquipmentCard();
             });
         });
+
+        // Mobile: toggle description
+        const toggleDescBtn = document.getElementById('toggleDesc');
+        if (toggleDescBtn) {
+            toggleDescBtn.addEventListener('click', () => {
+                const p = document.getElementById('equipSub');
+                const isClamped = p.classList.contains('clamp-3');
+                p.classList.toggle('clamp-3', !isClamped);
+                toggleDescBtn.innerHTML = isClamped
+                    ? 'Свернуть <i class="fa-solid fa-chevron-up text-xs"></i>'
+                    : 'Показать полностью <i class="fa-solid fa-chevron-down text-xs"></i>';
+            });
+        }
 
         // Preorder form demo handler
         const preorderForm = document.getElementById('preorderForm');
@@ -808,15 +899,38 @@
 
         preorderForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Here you would send to backend/CRM
             formToast.classList.remove('hidden');
             preorderForm.reset();
-
-            // keep selection state (optional) - not resetting selects
-            // productSelect.value = ""; shapeSelect.value = ""; showEquipmentCard();
-
             setTimeout(() => formToast.classList.add('hidden'), 5000);
         });
+
+        // Mobile: toggle video block
+        const videoToggleBtn = document.getElementById('videoToggleBtn');
+        const videoWrap = document.getElementById('videoWrap');
+        const videoChevron = document.getElementById('videoChevron');
+
+        if (videoToggleBtn && videoWrap) {
+            videoToggleBtn.addEventListener('click', () => {
+                const isHidden = videoWrap.classList.contains('hidden');
+
+                if (isHidden) {
+                    videoWrap.classList.remove('hidden');
+                    // optional: smooth scroll to video after opening
+                    // videoWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (videoChevron) {
+                        videoChevron.classList.remove('fa-chevron-down');
+                        videoChevron.classList.add('fa-chevron-up');
+                    }
+                    videoToggleBtn.querySelector('span')?.remove();
+                } else {
+                    videoWrap.classList.add('hidden');
+                    if (videoChevron) {
+                        videoChevron.classList.remove('fa-chevron-up');
+                        videoChevron.classList.add('fa-chevron-down');
+                    }
+                }
+            });
+        }
     </script>
 </body>
 
